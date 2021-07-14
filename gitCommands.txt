@@ -1,0 +1,8 @@
+git checkout -b --> new branch
+git checkout-->change branch
+git status
+git add .
+git add -u
+git commit -m ""
+git push
+git pull
