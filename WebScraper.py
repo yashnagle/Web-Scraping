@@ -20,11 +20,17 @@ sq = sq + '&ref=nb_sb_noss_2'
 
 source = requests.get(sq).text
 soup = BeautifulSoup(source, 'lxml')
-count = 0
+count = 1
 
-for sp in soup.find_all('span'):
-    if count == 2:
-        break
-    print(sp)
-    count = count + 1
+print(sq)
+# for sp in soup.find_all('a', class_='a-link-normal a-text-normal'):
+#     print(sp)
+#     # print('hi')
+#     # print(count)
+#     # print(sp.span.text)
+#     if count == 3:
+#         break
+#     count = count + 1
+
+print(soup.find('a', class_='a-link-normal a-text-normal'))
 
