@@ -1,2 +1,2 @@
 # Web-Scraping
-Used requests api and BeautifulSoup for webScraping and saving the data in a file
+Used requests api and BeautifulSoup for webScraping and saved the data in a CSV file
