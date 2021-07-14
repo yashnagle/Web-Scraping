@@ -22,15 +22,17 @@ source = requests.get(sq).text
 soup = BeautifulSoup(source, 'lxml')
 count = 1
 
-print(sq)
-# for sp in soup.find_all('a', class_='a-link-normal a-text-normal'):
-#     print(sp)
-#     # print('hi')
-#     # print(count)
-#     # print(sp.span.text)
-#     if count == 3:
-#         break
-#     count = count + 1
+# print(sq)
+# for sp in soup.find_all('span', 'a-size-medium a-color-base a-text-normal'):
+    # print(sp.text)
+    # print('hi')
+    # print(count)
+    # print(sp.span.text)
+    # if count == 3:
+        # break
+    # count = count + 1
 
-print(soup.find('a', class_='a-link-normal a-text-normal'))
+l = soup.find_all('span', 'a-size-medium a-color-base a-text-normal')
+print(l)
+print('hi')
 
