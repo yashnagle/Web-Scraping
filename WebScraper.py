@@ -8,31 +8,45 @@ Created on Tue Jul 13 11:33:09 2021
 from bs4 import BeautifulSoup
 import requests
 import csv
+from os import system
+from msedge.selenium_tools import Edge, EdgeOptions
 
-searchQuery = input('What would you like to search?\n')
-sq = 'https://www.amazon.in/s?k='
-for w in searchQuery:
-    if w == ' ':
-        sq = sq + '+'
-    else:
-        sq = sq + w
-sq = sq + '&ref=nb_sb_noss_2'
 
-source = requests.get(sq).text
-soup = BeautifulSoup(source, 'lxml')
-count = 1
+csv_file = open('amazon_scrape.csv', 'w', encoding='utf-8')
+csv_writer = csv.writer(csv_file)
+csv_writer.writerow(['Sr. No', 'Product Name', 'Price'])
+#Begin an instance of the webDriver
 
-# print(sq)
-# for sp in soup.find_all('span', 'a-size-medium a-color-base a-text-normal'):
-    # print(sp.text)
-    # print('hi')
-    # print(count)
-    # print(sp.span.text)
-    # if count == 3:
-        # break
-    # count = count + 1
+# url = 'https://www.amazon.in'
+# driver.get(url)
+# search=input('Search:\n')
+search = input('Search: \n')
+def get_url(search_term):
+    template = 'https://www.amazon.in/s?k={}&ref=nb_sb_noss'
+    search_term=search_term.replace(' ', '+')
+    return template.format(search_term)
 
-l = soup.find_all('span', 'a-size-medium a-color-base a-text-normal')
-print(l)
-print('hi')
+url = get_url(search)
+options = EdgeOptions()
+options.use_chromium = True
+driver = Edge(options= options)
+
+driver.get(url)
+
+#Extracting values
+soup = BeautifulSoup(driver.page_source, 'lxml')
+driver.quit()
+system('cls')
+n=[]
+p=[]
+for name in soup.find_all('span', class_='a-size-medium a-color-base a-text-normal'):
+    n.append(name.text)
+for price in soup.find_all('span', class_='a-price-whole'):
+    p.append(price.text)
+
+for i in range(len(n)):
+    if i >= len(p):
+        break
+    csv_writer.writerow([(i+1), n[i], p[i]])
+
 
