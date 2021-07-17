@@ -14,7 +14,7 @@ from msedge.selenium_tools import Edge, EdgeOptions
 
 csv_file = open('amazon_scrape.csv', 'w', encoding='utf-8')
 csv_writer = csv.writer(csv_file)
-csv_writer.writerow(['Sr. No', 'Product Name', 'Price'])
+csv_writer.writerow(['Sr. No', 'Product Name', 'Price', 'Website'])
 #Begin an instance of the webDriver
 
 # url = 'https://www.amazon.in'
@@ -37,16 +37,25 @@ driver.get(url)
 soup = BeautifulSoup(driver.page_source, 'lxml')
 driver.quit()
 system('cls')
+
 n=[]
 p=[]
-for name in soup.find_all('span', class_='a-size-medium a-color-base a-text-normal'):
+for result in soup.find_all('div', {'data-component-type':'s-search-result'}):
+    if result == None:
+        continue
+    name = result.find('span', 'a-size-medium a-color-base a-text-normal')
+    price = result.find('span','a-price-whole')
+    if name == None or price == None:
+        continue
     n.append(name.text)
-for price in soup.find_all('span', class_='a-price-whole'):
     p.append(price.text)
 
 for i in range(len(n)):
     if i >= len(p):
         break
-    csv_writer.writerow([(i+1), n[i], p[i]])
+    csv_writer.writerow([(i+1), n[i], '₹'+p[i], 'Amazon.in'])
+
+print('DONE')
+
 
 
