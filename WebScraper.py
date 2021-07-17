@@ -21,12 +21,16 @@ url = 'https://www.amazon.in'
 # driver.get(url)
 # search=input('Search:\n')
 search = input('Search: \n')
-def get_url(search_term):
-    template = 'https://www.amazon.in/s?k={}&ref=nb_sb_noss'
-    search_term=search_term.replace(' ', '+')
-    return template.format(search_term)
-
-url = get_url(search)
+def get_url(search_term, aa):
+    if aa == 'amazon':
+        template = 'https://www.amazon.in/s?k={}&ref=nb_sb_noss'
+        search_term=search_term.replace(' ', '+')
+        return template.format(search_term)
+    elif aa == 'flipkart':
+        template = 'https://www.flipkart.com/search?q={}&otracker=search&otracker1=search&marketplace=FLIPKART&as-show=on&as=off'
+        search_term = search_term.replace(' ', '%20')
+        return template.format(search_term)
+url = get_url(search, 'amazon')
 options = EdgeOptions()
 options.use_chromium = True
 driver = Edge(options= options)
@@ -65,9 +69,9 @@ while count <= 3:
 
     count = count + 1
 
-driver.quit()
+# driver.quit()
 system('cls')
-
+i = 0
 for i in range(len(n)):
     if i >= len(p):
         break
@@ -75,5 +79,31 @@ for i in range(len(n)):
 
 print('Amazon Done')
 
+url1=get_url(search,'flipkart')
+n1=[]
+p1=[]
+driver.get(url1)
+soup = BeautifulSoup(driver.page_source, 'lxml')
+# s = soup.find('a', class_='_1fQZEK')
+system('cls')
+# print(s)
+driver.quit()
+for re in soup.find_all('a', class_='_1fQZEK'):
 
+    if re == None:
+        continue
+    n1.append(re.find('div', class_='_4rR01T').text)
+    # print(re.find('div', class_='_4rR01T').text)
+    p1.append(re.find('div', class_='_30jeq3 _1_WHN1').text)
+    # print(re.find('div', class_='_30jeq3 _1_WHN1').text)
+
+# sys.exit()
+
+for j in range(len(n1)):
+    if j >= len(p1):
+        break
+    csv_writer.writerow([(j+i+1), n1[j],p1[j], 'flipkart'])
+
+system('cls')
+print('DONE')
 
