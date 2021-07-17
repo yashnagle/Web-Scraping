@@ -17,7 +17,7 @@ csv_writer = csv.writer(csv_file)
 csv_writer.writerow(['Sr. No', 'Product Name', 'Price', 'Website'])
 #Begin an instance of the webDriver
 
-# url = 'https://www.amazon.in'
+url = 'https://www.amazon.in'
 # driver.get(url)
 # search=input('Search:\n')
 search = input('Search: \n')
@@ -30,32 +30,50 @@ url = get_url(search)
 options = EdgeOptions()
 options.use_chromium = True
 driver = Edge(options= options)
-
 driver.get(url)
 
 #Extracting values
 soup = BeautifulSoup(driver.page_source, 'lxml')
-driver.quit()
-system('cls')
+
 
 n=[]
 p=[]
-for result in soup.find_all('div', {'data-component-type':'s-search-result'}):
-    if result == None:
-        continue
-    name = result.find('span', 'a-size-medium a-color-base a-text-normal')
-    price = result.find('span','a-price-whole')
-    if name == None or price == None:
-        continue
-    n.append(name.text)
-    p.append(price.text)
+navigation = soup.find('div', class_='a-section a-spacing-none a-padding-base').find('li',class_='a-disabled-last')
+count = 0
+while count <= 3:
+
+    for result in soup.find_all('div', {'data-component-type':'s-search-result'}):
+        # print('hi')
+        if result == None:
+            continue
+        name = result.find('span', 'a-size-medium a-color-base a-text-normal')
+        price = result.find('span','a-price-whole')
+        if name != None and price != None:
+            n.append(name.text)
+            p.append(price.text)
+
+    if navigation != None:
+        break
+    nextPage = soup.find('div', class_='a-section a-spacing-none a-padding-base').find('li',class_='a-normal').a['href']
+    url = 'https://www.amazon.in' + nextPage
+    # print(url)
+    url.format(soup.find('div', class_='a-section a-spacing-none a-padding-base').find('li',class_='a-normal').a['href'])
+    print(url)
+    driver.get(url)
+    soup = BeautifulSoup(driver.page_source, 'lxml')
+    navigation = soup.find('div', class_='a-section a-spacing-none a-padding-base').find('li',class_='a-disabled-last')
+
+    count = count + 1
+
+driver.quit()
+system('cls')
 
 for i in range(len(n)):
     if i >= len(p):
         break
     csv_writer.writerow([(i+1), n[i], '₹'+p[i], 'Amazon.in'])
 
-print('DONE')
+print('Amazon Done')
 
 
 
